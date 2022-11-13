@@ -60,7 +60,7 @@ def str2bool(v):
 def get_parser():
     # parameter priority: command line > config > default
     parser = argparse.ArgumentParser(
-        description='Spatial Temporal Graph Convolution Network')
+        description='torch_running_framework_demo')
     parser.add_argument(
         '--work-dir',
         default='./work_dir/temp',
