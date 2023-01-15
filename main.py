@@ -60,7 +60,7 @@ def str2bool(v):
 def get_parser():
     # parameter priority: command line > config > default
     parser = argparse.ArgumentParser(
-        description='torch_running_framework_demo')
+        description='Spatial Temporal Graph Convolution Network')
     parser.add_argument(
         '--work-dir',
         default='./work_dir/temp',
@@ -365,9 +365,11 @@ class Processor():
         self.record_time()
         return split_time
 
+    # 设置损失函数
     def set_loss(self):
         self.loss = nn.CrossEntropyLoss().cuda(self.output_device)
 
+    # 计算准确率
     def get_acc(self,output,label):
         value, predict_label = torch.max(output.data, 1)
         acc = torch.mean((predict_label == label.data).float())
@@ -421,7 +423,6 @@ class Processor():
             torch.save(weights, self.arg.model_saved_name + '-' + str(epoch+1) + '-' + str(int(self.global_step)) + '.pt')
 
 
-
     def eval(self, epoch, save_score=False, loader_name=['test'], wrong_file=None, result_file=None):
         if wrong_file is not None:
             f_w = open(wrong_file, 'w')
@@ -465,10 +466,12 @@ class Processor():
             #     score_pth=np.concatenate(score_frag,axis=0)
             #     print(score_pth.shape)
             #     torch.save(score_pth, 'test.pth')
-
             self.print_log('\tMean {} loss of {} batches: {}.'.format(
                 ln, len(self.data_loader[ln]), np.mean(loss_value)))
 
+    # 设置数据保存
+    def save_eval(self):
+        pass
     def start(self):
         if self.arg.phase == 'train':
             self.print_log('Parameters:\n{}\n'.format(str(vars(self.arg))))
@@ -486,7 +489,7 @@ class Processor():
                 self.eval(epoch, save_score=self.arg.save_score, loader_name=['test'])
 
             # test the best model
-            weights_path = glob.glob(os.path.join(self.arg.work_dir, 'runs-'+str(self.best_acc_epoch)+'*'))[0]
+            weights_path = glob.glob(os.path.join(self.arg.work_dir, 'runs-'+str(self.best_acc_epoch)+'-*'))[0]
             weights = torch.load(weights_path)
             if type(self.arg.device) is list:
                 if len(self.arg.device) > 1:
@@ -514,7 +517,7 @@ class Processor():
         elif self.arg.phase == 'test':
             wf = self.arg.weights.replace('.pt', '_wrong.txt')
             rf = self.arg.weights.replace('.pt', '_right.txt')
-
+            self.set_loss()
             if self.arg.weights is None:
                 raise ValueError('Please appoint --weights.')
             self.arg.print_log = False

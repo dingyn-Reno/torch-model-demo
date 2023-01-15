@@ -1,0 +1,2 @@
+test: python main.py --config config/config.yaml --phase test --save-score True --device 0 --weight
+train: python main.py --config ? --device 0
