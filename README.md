@@ -17,3 +17,17 @@ python main.py --config config/config.yaml --device 0
 ```bash
 tensorboard --logdir=work_dir/mnist/runs --bind_all
 ```
+## 训练和测试
+test: 
+```bash
+python main.py --config config/config.yaml --phase test --save-score True --device 0 --weights ?
+```
+train: 
+```bash
+python main.py --config ? --device 
+```
+
+
+
+
+
