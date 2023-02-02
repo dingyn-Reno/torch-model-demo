@@ -198,6 +198,7 @@ def get_parser():
         help='decay rate for learning rate')
     parser.add_argument('--warm_up_epoch', type=int, default=0)
     parser.add_argument('--classes', type=int, default=10)
+    parser.add_argument('--momentum',type=float,default=0)
     return parser
 
 
@@ -309,7 +310,7 @@ class Processor():
             self.optimizer = optim.SGD(
                 self.model.parameters(),
                 lr=self.arg.base_lr,
-                momentum=0.9,
+                momentum=self.arg.momentum,
                 nesterov=self.arg.nesterov,
                 weight_decay=self.arg.weight_decay)
         elif self.arg.optimizer == 'Adam':
