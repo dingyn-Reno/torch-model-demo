@@ -199,6 +199,8 @@ def get_parser():
     parser.add_argument('--warm_up_epoch', type=int, default=0)
     parser.add_argument('--classes', type=int, default=10)
     parser.add_argument('--momentum',type=float,default=0)
+    parser.add_argument('--clip',type=float,default=1000)
+    parser.add_argument('--grad_norm', type=str2bool, default=False)
     return parser
 
 
@@ -376,7 +378,7 @@ class Processor():
         acc = torch.mean((predict_label == label.data).float())
         return acc
 
-    def train(self, epoch, save_model=False):
+    def train(self, epoch, save_model=False,grad_norm=False):
         self.model.train()
         self.print_log('Training epoch: {}'.format(epoch + 1))
         loader = self.data_loader['train']
@@ -397,6 +399,8 @@ class Processor():
             loss = self.loss(output, label)
             self.optimizer.zero_grad()
             loss.backward()
+            if grad_norm==True:
+                torch.nn.utils.clip_grad_norm_(self.model.parameters(),self.arg.clip)
             self.optimizer.step()
             loss_value.append(loss.data.item())
             timer['model'] += self.split_time()
@@ -485,7 +489,7 @@ class Processor():
                 save_model = (((epoch + 1) % self.arg.save_interval == 0) or (
                         epoch + 1 == self.arg.num_epoch)) and (epoch+1) > self.arg.save_epoch
 
-                self.train(epoch, save_model=save_model)
+                self.train(epoch, save_model=save_model, grad_norm=self.arg.grad_norm)
 
                 self.eval(epoch, save_score=self.arg.save_score, loader_name=['test'])
 

@@ -24,11 +24,14 @@ batch_size: 16
 test_batch_size: 16
 
 #optim
-base_lr: 0.1
+base_lr: 0.001
 step: [150, 225]
-num_epoch: 20
-lr_decay_rate: 0.1
-warm_up_epoch: 5
-save_epoch: 5
+num_epoch: 10
+lr_decay_rate: 1
+warm_up_epoch: 1
+save_epoch: 0
+weight_decay: 0.000001
 momentum: 0
-seed: 5
+seed: 42
+grad_norm: True
+clip: 1000
