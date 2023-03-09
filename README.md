@@ -8,6 +8,11 @@ A sample of the PyTorch deep learning script.
 5 设置评分函数
 6 设置数据保存
 7 配置文件放入config文件夹
+
+```bash
+pip install -e torchlight
+```
+
 ## 运行项目
 本项目提供了一个使用LeNet对FashionMnist进行分类的示例，运行代码
 ```bash
