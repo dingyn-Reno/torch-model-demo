@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class LeNet(nn.Module):
+class Model(nn.Module):
     def __init__(self,kernel_size=5,padding=2,stride=2):
         super(LeNet,self).__init__()
         self.f1=nn.Conv2d(1, 6, kernel_size=kernel_size,padding=padding)
@@ -28,6 +28,7 @@ class LeNet(nn.Module):
         return x
 
 if __name__=='__main__':
-    model=LeNet()
-    for name, parameters in model.named_parameters():
-        print(name, ':', parameters.size())
+    model=Model()
+    input = torch.randn(1,543,3)
+    flops, params = profile(model, inputs=(input,))
+    print(flops, params)
