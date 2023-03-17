@@ -35,3 +35,9 @@ momentum: 0
 seed: 42
 grad_norm: True
 clip: 1000
+
+compile: False
+#compile: default, reduce-overhead or max-autotune
+compile_mode: default
+AMP: False
+AMP_scaler: False

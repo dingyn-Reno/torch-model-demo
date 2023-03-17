@@ -30,6 +30,8 @@ rlimit = resource.getrlimit(resource.RLIMIT_NOFILE)
 resource.setrlimit(resource.RLIMIT_NOFILE, (2048, rlimit[1]))
 from send_mail import send
 from torch.utils.tensorboard import SummaryWriter
+from torch.cuda.amp import autocast as autocast
+from torch.cuda.amp import GradScaler as GradScaler
 
 def init_seed(seed):
     torch.cuda.manual_seed_all(seed)
@@ -197,10 +199,13 @@ def get_parser():
         default=0.1,
         help='decay rate for learning rate')
     parser.add_argument('--warm_up_epoch', type=int, default=0)
-    parser.add_argument('--classes', type=int, default=10)
     parser.add_argument('--momentum',type=float,default=0)
     parser.add_argument('--clip',type=float,default=1000)
     parser.add_argument('--grad_norm', type=str2bool, default=False)
+    parser.add_argument('--compile', type=str2bool, default=False)
+    parser.add_argument('--compile_mode',  default='default')
+    parser.add_argument('--AMP', type=str2bool, default=True)
+    parser.add_argument('--AMP_scaler', type=str2bool, default=False)
     return parser
 
 
@@ -273,6 +278,8 @@ class Processor():
         print(Model)
         # 模型参数配置位置
         self.model = Model(**self.arg.model_args)
+        if self.arg.compile==True:
+            self.model=torch.compile(self.model,mode=self.arg.compile_mode)
         print(self.model)
 
         if self.arg.weights:
@@ -389,19 +396,32 @@ class Processor():
         self.record_time()
         timer = dict(dataloader=0.001, model=0.001, statistics=0.001)
         process = tqdm(loader, ncols=40)
+        scaler = GradScaler()
         for batch_idx, (data, label, index) in enumerate(process):
             self.global_step += 1
             with torch.no_grad():
                 data = data.float().cuda(self.output_device)
                 label = label.long().cuda(self.output_device)
             timer['dataloader'] += self.split_time()
-            output = self.model(data)
-            loss = self.loss(output, label)
+            if self.arg.AMP==True:
+                with autocast():
+                    output = self.model(data)
+                    loss = self.loss(output, label)
+            else:
+                output = self.model(data)
+                loss = self.loss(output, label)
             self.optimizer.zero_grad()
-            loss.backward()
+            if self.arg.AMP_scaler==True:
+                scaler.scale(loss).backward()
+            else:
+                loss.backward()
             if grad_norm==True:
                 torch.nn.utils.clip_grad_norm_(self.model.parameters(),self.arg.clip)
-            self.optimizer.step()
+            if self.arg.AMP_scaler==True:
+                scaler.step(self.optimizer)
+                scaler.update()
+            else:
+                self.optimizer.step()
             loss_value.append(loss.data.item())
             timer['model'] += self.split_time()
             acc=self.get_acc(output,label)
