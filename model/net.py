@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 class Model(nn.Module):
     def __init__(self,kernel_size=5,padding=2,stride=2):
-        super(LeNet,self).__init__()
+        super(Model,self).__init__()
         self.f1=nn.Conv2d(1, 6, kernel_size=kernel_size,padding=padding)
         self.f2=nn.Conv2d(6, 16, kernel_size=kernel_size)
         self.l1=nn.Linear(1600, 120)

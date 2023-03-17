@@ -12,7 +12,7 @@ test_feeder_args:
   state: 1
 
 # model
-model: model.net.LeNet
+model: model.net.Model
 model_args:
   kernel_size: 5
   padding: 2
