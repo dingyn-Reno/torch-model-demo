@@ -482,7 +482,7 @@ class Processor():
                 self.best_acc = accuracy
                 self.best_acc_epoch = epoch + 1
 
-            print('Accuracy: ', accuracy, ' model: ', self.arg.model_saved_name)
+            self.print_log('\tAccuracy: {}'.format(accuracy))
             if self.arg.phase == 'train':
                 self.val_writer.add_scalar('loss', loss, self.global_step)
                 self.val_writer.add_scalar('acc', accuracy, self.global_step)
