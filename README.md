@@ -55,7 +55,7 @@ python main.py --config ? --device
 torch.compile具有mode参数，参数拥有以下三种，默认为False：
 
 - default：默认优化
-- reduce-overhead: 减少模型开销并提升内存，可以帮助小模型提速
+- reduce-overhead: 减少模型开销但提升内存占用，可以帮助小模型提速
 - max-autotune: 最大化提升模型速度
 
 ### AMP

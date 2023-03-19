@@ -12,11 +12,9 @@ test_feeder_args:
   state: 1
 
 # model
-model: model.net.Model
+model: model.resnet50.Model
 model_args:
-  kernel_size: 5
-  padding: 2
-  stride: 2
+  in_chans: 1
 
 #training
 device: [0]
@@ -36,8 +34,8 @@ seed: 42
 grad_norm: True
 clip: 1000
 
-compile: False
+compile: True
 #compile: default, reduce-overhead or max-autotune
-compile_mode: default
+compile_mode: max-autotune
 AMP: False
 AMP_scaler: False

@@ -30,5 +30,6 @@ class Model(nn.Module):
 if __name__=='__main__':
     model=Model()
     input = torch.randn(1,543,3)
+    from thop import profile
     flops, params = profile(model, inputs=(input,))
     print(flops, params)
