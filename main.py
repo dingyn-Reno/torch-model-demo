@@ -206,6 +206,7 @@ def get_parser():
     parser.add_argument('--compile_mode',  default='default')
     parser.add_argument('--AMP', type=str2bool, default=True)
     parser.add_argument('--AMP_scaler', type=str2bool, default=False)
+    parser.add_argument('--to_onnx',type=str2bool, default=False)
     return parser
 
 
@@ -547,7 +548,6 @@ class Processor():
             self.print_log('Model:   {}.'.format(self.arg.model))
             self.print_log('Weights: {}.'.format(self.arg.weights))
             self.eval(epoch=0, save_score=self.arg.save_score, loader_name=['test'])
-            torch.save(self.model.state_dict(), '{}/model.pytorch'.format(self.arg.work_dir))
             self.print_log('Done.\n')
         elif self.arg.phase == 'train_only':
             self.print_log('Parameters:\n{}\n'.format(str(vars(self.arg))))
@@ -563,7 +563,6 @@ class Processor():
                         epoch + 1 == self.arg.num_epoch)) and (epoch + 1) > self.arg.save_epoch
 
                 self.train(epoch, save_model=save_model, grad_norm=self.arg.grad_norm)
-            torch.save(self.model.state_dict(), '{}/model.pytorch'.format(self.arg.work_dir))
             self.print_log('Done.\n')
 
 if __name__ == '__main__':

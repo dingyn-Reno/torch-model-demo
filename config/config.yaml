@@ -1,4 +1,4 @@
-work_dir: ./work_dir/mnist
+work_dir: ./work_dir/mnist_2
 #weights: ./work_dir/skating/CW/runs-219-4380.pt
 
 # feeder
@@ -12,7 +12,7 @@ test_feeder_args:
   state: 1
 
 # model
-model: model.resnet50.Model
+model: model.net.Model
 model_args:
   in_chans: 1
 
@@ -22,7 +22,7 @@ batch_size: 16
 test_batch_size: 16
 
 #optim
-base_lr: 0.001
+base_lr: 0.1
 step: [150, 225]
 num_epoch: 10
 lr_decay_rate: 1
@@ -36,6 +36,6 @@ clip: 1000
 
 compile: True
 #compile: default, reduce-overhead or max-autotune
-compile_mode: max-autotune
+compile_mode: default
 AMP: False
 AMP_scaler: False

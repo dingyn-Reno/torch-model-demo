@@ -43,4 +43,5 @@ def import_class(name):
 
 if __name__=='__main__':
     a=Feeder()
+    print(a[0][0].shape)
 
