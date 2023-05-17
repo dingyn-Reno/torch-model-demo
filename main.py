@@ -124,7 +124,7 @@ def get_parser():
     parser.add_argument(
         '--num-worker',
         type=int,
-        default=16,
+        default=0,
         help='the number of worker for data loader')
 
     parser.add_argument(
@@ -204,7 +204,7 @@ def get_parser():
     parser.add_argument('--grad_norm', type=str2bool, default=False)
     parser.add_argument('--compile', type=str2bool, default=False)
     parser.add_argument('--compile_mode',  default='default')
-    parser.add_argument('--AMP', type=str2bool, default=True)
+    parser.add_argument('--AMP', type=str2bool, default=False)
     parser.add_argument('--AMP_scaler', type=str2bool, default=False)
     parser.add_argument('--to_onnx',type=str2bool, default=False)
     return parser
