@@ -100,5 +100,9 @@ onnx文件可以在[netron](https://github.com/lutzroeder/netron)上形成模型
 
 ![image.png](images/netron.png)
 
+## 可能遇到问题
+
+1 如果pillow报错，建议将torchvision卸载重装
+2 collections报错的话，把报错位置的from collections改成from collections.abc
 
 
